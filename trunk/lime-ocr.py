@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Main Version: 2.4
+# Sub Version: 1.1
+# SVN: r4
+# Sun 12/13/2009 3:26:39.2 AM
 ##############   lime-ocr.py - version 2.4.1.1   ##############################
 # Copyright 2009 Nishad TR <nishad at limeconsultants.com>
 # http://www.limeconsultants.com/
