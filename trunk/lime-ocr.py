@@ -1,17 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Main Version: 2.4
-# Sub Version: 1.1
-# SVN: r4
-# Sun 12/13/2009 3:26:39.2 AM
-##############   lime-ocr.py - version 2.4.1.1   ##############################
+# Sub Version: 2.0
+# SVN: r6
+# Tue 12/15/2009 5:14:23.48 AM
+##############   lime-ocr.py - version 2.4.2.0   ##############################
+# Lime OCR, Free Opensource OCR Software with tesseract-ocr engine
+#
+# lime-ocr.py
 # Copyright 2009 Nishad TR <nishad at limeconsultants.com>
 # http://www.limeconsultants.com/
 #
+# tesseract-gui.py
 # Copyright 2009 Juan Ramon Castan <juanramoncastan at yahoo.es>
 # Based in the previous work of Filip Domenic "guitesseract.py" 
+#
 # guitesseract.py
 # Copyright 2008 Filip Dominec <filip.dominec at gmail.com>
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -36,12 +42,18 @@ import string
 
 class Whc:
 	def __init__(self):
-		runBash2("splash.exe")
+		# Lime OCR Hacks
+		runBash2("splash.exe 3")
+		runBash("ls.exe -m -1 tessdata\*.traineddata > lslang.txt")
+		runBash("langlist.exe")
+		runBash2("GUP.exe")
+		# Enough
+		
 		###---Window and framework -----------------------------
 		self.mainwindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
 		self.mainwindow.connect("destroy", self.destroy)
 		
-		self.mainwindow.set_title("Lime OCR 2.4.1")
+		self.mainwindow.set_title("Lime OCR 2.4.2")
 		self.mainwindow.connect('destroy', lambda w: gtk.main_quit())
 		self.mainwindow.set_icon_from_file("share\\lime-ocr\\lime-ocr-icon.png")
 
@@ -613,10 +625,6 @@ class Whc:
 		self.mainwindow.show()
 		self.f_init_variables()
 		self.f_create_lang()
-		
-		runBash2("updater.exe")
-
-
 	# __init__ END
 
 ################################################################################
@@ -1198,202 +1206,226 @@ class Whc:
 	# f_generallize END
 
 	def f_create_lang(self):
-		Languages = { 	"Afar":"aar",\
-						"Abkhazian":"abk",\
-						"Afrikaans":"afr",\
-						"Akan":"aka",\
-						"Amharic":"amh",\
-						"Arabic":"ara",\
-						"Aragonese":"arg",\
-						"Assamese":"asm",\
-						"Avaric":"ava",\
-						"Avestan":"ave",\
-						"Aymara":"aym",\
-						"Azerbaijani":"aze",\
-						"Bashkir":"bak",\
-						"Bambara":"bam",\
-						"Belarusian":"bel",\
-						"Bengali":"ben",\
-						"Bihari":"bih",\
-						"Bislama":"bis",\
-						"Tibetan":"bod",\
-						"Bosnian":"bos",\
-						"Breton":"bre",\
-						"Bulgarian":"bul",\
-						"Catalan":"cat",\
-						"Czech":"ces",\
-						"Chamorro":"cha",\
-						"Chechen":"che",\
-						"Church Slavic":"chu",\
-						"Chuvash":"chv",\
-						"Cornish":"cor",\
-						"Corsican":"cos",\
-						"Cree":"cre",\
-						"Welsh":"cym",\
-						"Danish":"dan",\
-						"German":"deu",\
-						"Divehi":"div",\
-						"Dzongkha":"dzo",\
-						"Modern Greek":"ell",\
-						"English":"eng",\
-						"Esperanto":"epo",\
-						"Estonian":"est",\
-						"Basque":"eus",\
-						"Ewe":"ewe",\
-						"Faroese":"fao",\
-						"Persian":"fas",\
-						"Fijian":"fij",\
-						"Finnish":"fin",\
-						"French":"fra",\
-						"Western Frisian":"fry",\
-						"Fulah":"ful",\
-						"Gaelic":"gla",\
-						"Irish":"gle",\
-						"Galician":"glg",\
-						"Manx":"glv",\
-						"Guaran":"grn",\
-						"Gujarati":"guj",\
-						"Haitian":"hat",\
-						"Hausa":"hau",\
-						"Modern Hebrew":"heb",\
-						"Herero":"her",\
-						"Hindi":"hin",\
-						"Hiri Motu":"hmo",\
-						"Croatian":"hrv",\
-						"Hungarian":"hun",\
-						"Armenian":"hye",\
-						"Igbo":"ibo",\
-						"Ido":"ido",\
-						"Sichuan Yi":"iii",\
-						"Inuktitut":"iku",\
-						"Interlingue":"ile",\
-						"Interlingua":"ina",\
-						"Indonesian":"ind",\
-						"Inupiaq":"ipk",\
-						"Icelandic":"isl",\
-						"Italian":"ita",\
-						"Javanese":"jav",\
-						"Japanese":"jpn",\
-						"Kalaallisut":"kal",\
-						"Kannada":"kan",\
-						"Kashmiri":"kas",\
-						"Georgian":"kat",\
-						"Kanuri":"kau",\
-						"Kazakh":"kaz",\
-						"Central Khmer":"khm",\
-						"Kikuyu":"kik",\
-						"Kinyarwanda":"kin",\
-						"Kirghiz":"kir",\
-						"Komi":"kom",\
-						"Kongo":"kon",\
-						"Korean":"kor",\
-						"Kwanyama":"kua",\
-						"Kurdish":"kur",\
-						"Lao":"lao",\
-						"Latin":"lat",\
-						"Latvian":"lav",\
-						"Limburgish":"lim",\
-						"Lingala":"lin",\
-						"Lithuanian":"lit",\
-						"Luxembourgish":"ltz",\
-						"Luba-Katanga":"lub",\
-						"Ganda":"lug",\
-						"Marshallese":"mah",\
-						"Malayalam":"mal",\
-						"Marathi":"mar",\
-						"Macedonian":"mkd",\
-						"Malagasy":"mlg",\
-						"Maltese":"mlt",\
-						"Mongolian":"mon",\
-						"M?ori":"mri",\
-						"Malay":"msa",\
-						"Burmese":"mya",\
-						"Nauru":"nau",\
-						"Navajo":"nav",\
-						"South Ndebele":"nbl",\
-						"North Ndebele":"nde",\
-						"Ndonga":"ndo",\
-						"Nepali":"nep",\
-						"Dutch Flemish":"nld",\
-						"Norwegian Nynorsk":"nno",\
-						"Norwegian Bokmal":"nob",\
-						"Norwegian":"nor",\
-						"Chichewa":"nya",\
-						"Occitan ":"oci",\
-						"Ojibwa":"oji",\
-						"Oriya":"ori",\
-						"Oromo":"orm",\
-						"Ossetian":"oss",\
-						"Panjabi":"pan",\
-						"Pali":"pli",\
-						"Polish":"pol",\
-						"Portuguese":"por",\
-						"Pashto":"pus",\
-						"Quechua":"que",\
-						"Romansh":"roh",\
-						"Romanian":"ron",\
-						"Rundi":"run",\
-						"Russian":"rus",\
-						"Sango":"sag",\
-						"Sanskrit":"san",\
-						"Sinhala":"sin",\
-						"Slovak":"slk",\
-						"Slovene":"slv",\
-						"Northern Sami":"sme",\
-						"Samoan":"smo",\
-						"Shona":"sna",\
-						"Sindhi":"snd",\
-						"Somali":"som",\
-						"Southern Sotho":"sot",\
-						"Spanish":"spa",\
-						"Albanian":"sqi",\
-						"Sardinian":"srd",\
-						"Serbian":"srp",\
-						"Swati":"ssw",\
-						"Sundanese":"sun",\
-						"Swahili":"swa",\
-						"Swedish":"swe",\
-						"Tahitian":"tah",\
-						"Tamil":"tam",\
-						"Tatar":"tat",\
-						"Telugu":"tel",\
-						"Tajik":"tgk",\
-						"Tagalog":"tgl",\
-						"Thai":"tha",\
-						"Tigrinya":"tir",\
-						"Tonga":"ton",\
-						"Tswana":"tsn",\
-						"Tsonga":"tso",\
-						"Turkmen":"tuk",\
-						"Turkish":"tur",\
-						"Twi":"twi",\
-						"Uighur":"uig",\
-						"Ukrainian":"ukr",\
-						"Urdu":"urd",\
-						"Uzbek":"uzb",\
-						"Venda":"ven",\
-						"Vietnamese":"vie",\
-						"VolapŸk":"vol",\
-						"Walloon":"wln",\
-						"Wolof":"wol",\
-						"Xhosa":"xho",\
-						"Yiddish":"yid",\
-						"Yoruba":"yor",\
-						"Zhuang":"zha",\
-						"Chinese":"zho",\
-						"Zulu":"zul"}
-		self.ListLanguages={}
-		nnfin=len(Languages)
-		Nn=0
-		for nn in range (0,nnfin):
-			LangExist = runBash("ls tessdata\\" \
-						+ (Languages.values()[nn]) + ".traineddata")
-			if LangExist :
+		Languages = {}
+		try :
+			LanguageFile = open("lang-list.txt", "r")
+			linelas = LanguageFile.readlines()
+			nnfin = len(linelas)
+			for nn in range(0,nnfin):
+				if linelas[nn] == "\n": linelas[nn] = None
+				if linelas[nn] :
+					linea = linelas[nn].rstrip("\n")
+					(Key,Value) = linea.split("=",1)
+					Languages[Key] = Value
+				nn = nn+1
+			LanguageFile.close() 
+			self.ListLanguages={}
+			nnfin=len(Languages)
+			Nn=0
+			for nn in range (0,nnfin):
 				self.ListLanguages[Languages.keys()[nn]]=Languages.values()[nn]
 				self.cmbLang.append_text(Languages.keys()[nn])
 				if self.ConfVars["Language"] == Languages.values()[nn]:
 					self.cmbLang.set_active(Nn)
 				Nn = Nn + 1
+		except IOError:
+			nn = 0
+			Languages = { 	"Afar":"aar",\
+							"Abkhazian":"abk",\
+							"Afrikaans":"afr",\
+							"Akan":"aka",\
+							"Amharic":"amh",\
+							"Arabic":"ara",\
+							"Aragonese":"arg",\
+							"Assamese":"asm",\
+							"Avaric":"ava",\
+							"Avestan":"ave",\
+							"Aymara":"aym",\
+							"Azerbaijani":"aze",\
+							"Bashkir":"bak",\
+							"Bambara":"bam",\
+							"Belarusian":"bel",\
+							"Bengali":"ben",\
+							"Bihari":"bih",\
+							"Bislama":"bis",\
+							"Tibetan":"bod",\
+							"Bosnian":"bos",\
+							"Breton":"bre",\
+							"Bulgarian":"bul",\
+							"Catalan":"cat",\
+							"Czech":"ces",\
+							"Chamorro":"cha",\
+							"Chechen":"che",\
+							"Church Slavic":"chu",\
+							"Chuvash":"chv",\
+							"Cornish":"cor",\
+							"Corsican":"cos",\
+							"Cree":"cre",\
+							"Welsh":"cym",\
+							"Danish":"dan",\
+							"German":"deu",\
+							"Divehi":"div",\
+							"Dzongkha":"dzo",\
+							"Modern Greek":"ell",\
+							"English":"eng",\
+							"Esperanto":"epo",\
+							"Estonian":"est",\
+							"Basque":"eus",\
+							"Ewe":"ewe",\
+							"Faroese":"fao",\
+							"Persian":"fas",\
+							"Fijian":"fij",\
+							"Finnish":"fin",\
+							"French":"fra",\
+							"Western Frisian":"fry",\
+							"Fulah":"ful",\
+							"Gaelic":"gla",\
+							"Irish":"gle",\
+							"Galician":"glg",\
+							"Manx":"glv",\
+							"Guaran":"grn",\
+							"Gujarati":"guj",\
+							"Haitian":"hat",\
+							"Hausa":"hau",\
+							"Modern Hebrew":"heb",\
+							"Herero":"her",\
+							"Hindi":"hin",\
+							"Hiri Motu":"hmo",\
+							"Croatian":"hrv",\
+							"Hungarian":"hun",\
+							"Armenian":"hye",\
+							"Igbo":"ibo",\
+							"Ido":"ido",\
+							"Sichuan Yi":"iii",\
+							"Inuktitut":"iku",\
+							"Interlingue":"ile",\
+							"Interlingua":"ina",\
+							"Indonesian":"ind",\
+							"Inupiaq":"ipk",\
+							"Icelandic":"isl",\
+							"Italian":"ita",\
+							"Javanese":"jav",\
+							"Japanese":"jpn",\
+							"Kalaallisut":"kal",\
+							"Kannada":"kan",\
+							"Kashmiri":"kas",\
+							"Georgian":"kat",\
+							"Kanuri":"kau",\
+							"Kazakh":"kaz",\
+							"Central Khmer":"khm",\
+							"Kikuyu":"kik",\
+							"Kinyarwanda":"kin",\
+							"Kirghiz":"kir",\
+							"Komi":"kom",\
+							"Kongo":"kon",\
+							"Korean":"kor",\
+							"Kwanyama":"kua",\
+							"Kurdish":"kur",\
+							"Lao":"lao",\
+							"Latin":"lat",\
+							"Latvian":"lav",\
+							"Limburgish":"lim",\
+							"Lingala":"lin",\
+							"Lithuanian":"lit",\
+							"Luxembourgish":"ltz",\
+							"Luba-Katanga":"lub",\
+							"Ganda":"lug",\
+							"Marshallese":"mah",\
+							"Malayalam":"mal",\
+							"Marathi":"mar",\
+							"Macedonian":"mkd",\
+							"Malagasy":"mlg",\
+							"Maltese":"mlt",\
+							"Mongolian":"mon",\
+							"M?ori":"mri",\
+							"Malay":"msa",\
+							"Burmese":"mya",\
+							"Nauru":"nau",\
+							"Navajo":"nav",\
+							"South Ndebele":"nbl",\
+							"North Ndebele":"nde",\
+							"Ndonga":"ndo",\
+							"Nepali":"nep",\
+							"Dutch Flemish":"nld",\
+							"Norwegian Nynorsk":"nno",\
+							"Norwegian Bokmal":"nob",\
+							"Norwegian":"nor",\
+							"Chichewa":"nya",\
+							"Occitan ":"oci",\
+							"Ojibwa":"oji",\
+							"Oriya":"ori",\
+							"Oromo":"orm",\
+							"Ossetian":"oss",\
+							"Panjabi":"pan",\
+							"Pali":"pli",\
+							"Polish":"pol",\
+							"Portuguese":"por",\
+							"Pashto":"pus",\
+							"Quechua":"que",\
+							"Romansh":"roh",\
+							"Romanian":"ron",\
+							"Rundi":"run",\
+							"Russian":"rus",\
+							"Sango":"sag",\
+							"Sanskrit":"san",\
+							"Sinhala":"sin",\
+							"Slovak":"slk",\
+							"Slovene":"slv",\
+							"Northern Sami":"sme",\
+							"Samoan":"smo",\
+							"Shona":"sna",\
+							"Sindhi":"snd",\
+							"Somali":"som",\
+							"Southern Sotho":"sot",\
+							"Spanish":"spa",\
+							"Albanian":"sqi",\
+							"Sardinian":"srd",\
+							"Serbian":"srp",\
+							"Swati":"ssw",\
+							"Sundanese":"sun",\
+							"Swahili":"swa",\
+							"Swedish":"swe",\
+							"Tahitian":"tah",\
+							"Tamil":"tam",\
+							"Tatar":"tat",\
+							"Telugu":"tel",\
+							"Tajik":"tgk",\
+							"Tagalog":"tgl",\
+							"Thai":"tha",\
+							"Tigrinya":"tir",\
+							"Tonga":"ton",\
+							"Tswana":"tsn",\
+							"Tsonga":"tso",\
+							"Turkmen":"tuk",\
+							"Turkish":"tur",\
+							"Twi":"twi",\
+							"Uighur":"uig",\
+							"Ukrainian":"ukr",\
+							"Urdu":"urd",\
+							"Uzbek":"uzb",\
+							"Venda":"ven",\
+							"Vietnamese":"vie",\
+							"VolapŸk":"vol",\
+							"Walloon":"wln",\
+							"Wolof":"wol",\
+							"Xhosa":"xho",\
+							"Yiddish":"yid",\
+							"Yoruba":"yor",\
+							"Zhuang":"zha",\
+							"Chinese":"zho",\
+							"Zulu":"zul"}
+			self.ListLanguages={}
+			nnfin=len(Languages)
+			Nn=0
+			for nn in range (0,nnfin):
+				LangExist = runBash("ls tessdata\\" \
+							+ (Languages.values()[nn]) + ".traineddata")
+				if LangExist :
+					self.ListLanguages[Languages.keys()[nn]]=Languages.values()[nn]
+					self.cmbLang.append_text(Languages.keys()[nn])
+					if self.ConfVars["Language"] == Languages.values()[nn]:
+						self.cmbLang.set_active(Nn)
+					Nn = Nn + 1
 	# f_create_lang END
 
 	def f_lang_choice(self , widget): 
@@ -1567,10 +1599,10 @@ class Whc:
 			nnfin = len(ConcatFiles)
 			for nn in range(0,nnfin) :
 				File = ConcatFiles[nn]
-				Action = Action +" "+ File
-			self.btnConcat.set_current_folder(self.btnConcat.get_current_folder())
+				Action = Action + " \"" + File + "\""
+			CCfilename = self.btnConcat.set_current_folder(self.btnConcat.get_current_folder())
 			print Action
-			runBash(Action + " > " + self.FolderOut + Nombre + ".txt;")
+			runBash(Action + " > \"" + self.FolderOut + Nombre + ".txt\"")
 	# f_concat_files END
 
 	def f_fronend_lang(self):
